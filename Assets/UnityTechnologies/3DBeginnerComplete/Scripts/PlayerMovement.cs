@@ -7,12 +7,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public InputAction MoveAction;
-    
+
     public float turnSpeed = 20f;
 
     Animator m_Animator;
     Rigidbody m_Rigidbody;
-    AudioSource m_AudioSource;
+    public AudioSource rugFootsteps;
+    public AudioSource floorFootsteps;
+    bool onRug = false;
     Vector3 m_Movement;
     Quaternion m_Rotation = Quaternion.identity;
 
@@ -20,16 +22,15 @@ public class PlayerMovement : MonoBehaviour
     Vector3 to_mouse;
     float desired_Angle;
 
-    void Start ()
+    void Start()
     {
-        m_Animator = GetComponent<Animator> ();
-        m_Rigidbody = GetComponent<Rigidbody> ();
-        m_AudioSource = GetComponent<AudioSource> ();
-        
+        m_Animator = GetComponent<Animator>();
+        m_Rigidbody = GetComponent<Rigidbody>();
+
         MoveAction.Enable();
     }
 
-    void FixedUpdate ()
+    void FixedUpdate()
     {
         /* The character is always in the center of the screen.
          * By comparing the position of the mouse to the center of the screen a vector describing the 
@@ -53,16 +54,16 @@ public class PlayerMovement : MonoBehaviour
          * if we normalize a then its magnitude will also be 1.
          * this means arccos(a*i/||a||*||i||) can be simplified to arccos(y)
          */
-        center_screen.Set((Screen.width/2), (Screen.height/2), 0);
+        center_screen.Set((Screen.width / 2), (Screen.height / 2), 0);
         to_mouse = Input.mousePosition - center_screen;
         to_mouse.Normalize();
-        desired_Angle = (float) Math.Acos(to_mouse.y);
+        desired_Angle = (float)Math.Acos(to_mouse.y);
 
         // Converts radian angle to degrees and tracks which half it is on.
-        desired_Angle = (180f / (float) Math.PI) * desired_Angle;
-        if (to_mouse.x < 0) 
-        { 
-            desired_Angle = desired_Angle * -1; 
+        desired_Angle = (180f / (float)Math.PI) * desired_Angle;
+        if (to_mouse.x < 0)
+        {
+            desired_Angle = desired_Angle * -1;
         }
 
         //
@@ -70,35 +71,64 @@ public class PlayerMovement : MonoBehaviour
         m_Rotation.eulerAngles = new Vector3(0f, desired_Angle, 0f);
 
         var pos = MoveAction.ReadValue<Vector2>();
-        
+
         float horizontal = pos.x;
         float vertical = pos.y;
-        
-        m_Movement.Set(horizontal, 0f, vertical);
-        m_Movement.Normalize ();
 
-        bool hasHorizontalInput = !Mathf.Approximately (horizontal, 0f);
-        bool hasVerticalInput = !Mathf.Approximately (vertical, 0f);
+        m_Movement.Set(horizontal, 0f, vertical);
+        m_Movement.Normalize();
+
+        bool hasHorizontalInput = !Mathf.Approximately(horizontal, 0f);
+        bool hasVerticalInput = !Mathf.Approximately(vertical, 0f);
         bool isWalking = hasHorizontalInput || hasVerticalInput;
-        m_Animator.SetBool ("IsWalking", isWalking);
-        
+        m_Animator.SetBool("IsWalking", isWalking);
+
         if (isWalking)
         {
-            if (!m_AudioSource.isPlaying)
+            if (onRug)
             {
-                m_AudioSource.Play();
+                floorFootsteps.Stop();
+                if (!rugFootsteps.isPlaying)
+                {
+                    rugFootsteps.Play();
+                }
+            }
+            else
+            {
+                rugFootsteps.Stop();
+                if (!floorFootsteps.isPlaying)
+                {
+                    floorFootsteps.Play();
+                }
             }
         }
         else
         {
-            m_AudioSource.Stop ();
+            floorFootsteps.Stop();
+            rugFootsteps.Stop();
         }
 
     }
 
-    void OnAnimatorMove ()
+    void OnTriggerEnter(Collider other)
     {
-        m_Rigidbody.MovePosition (m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
-        m_Rigidbody.MoveRotation (m_Rotation);
+        if (other.CompareTag("Dust"))
+        {
+            onRug = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Dust"))
+        {
+            onRug = false;
+        }
+    }
+
+    void OnAnimatorMove()
+    {
+        m_Rigidbody.MovePosition(m_Rigidbody.position + m_Movement * m_Animator.deltaPosition.magnitude);
+        m_Rigidbody.MoveRotation(m_Rotation);
     }
 }
