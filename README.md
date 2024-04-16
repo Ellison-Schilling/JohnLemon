@@ -6,4 +6,4 @@
 * Dot product [contributed by Alex Passanante]: Added a mechanic so the MC looks towards the mouse during play. This Uses a dot product to convert a vector derived from the mouse position and the center of the screen 
 to an angle based off of an identity vector based on the worlds y rotation. More is written in the PlayerMovement script.
 
-* Particle Trigger [contributed by Ellison Schilling]: Added a particle system and script that trigger when any of the five corridor rugs are stepped on by the player using collidors. The effect is the appearence of dust coming up out of the carpets when they are steppd on by the user.
+* Particle Trigger [contributed by Ellison Schilling]: Added a particle system and script that trigger when any of the five corridor rugs are stepped on by the player. This is done by the use of collider boxes on each of the carpets that trigger when the user's collider comes into range of contact and turn on the particle system. The effect is the appearence of dust coming up out of the carpets when they are steppd on by the user.
