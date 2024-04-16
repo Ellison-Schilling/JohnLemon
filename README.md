@@ -1,4 +1,4 @@
-# JohnLemon
+# John Lemon's Haunted Jaunt - Modified
  Assignment 2 for CS410
 
  Contributors: Alex Passanante, Ellison Schilling
