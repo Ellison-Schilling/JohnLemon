@@ -9,8 +9,9 @@ public class DustHandler : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Rug"))
+        if (other.CompareTag("Dust"))
         {
+            Debug.Log("Dust on");
             isPlayerColliding = true;
             ToggleParticleEffect(isPlayerColliding);
         }
@@ -18,8 +19,9 @@ public class DustHandler : MonoBehaviour
 
     void OnTriggerExit(Collider other) 
     {
-        if (other.CompareTag("Rug"))
+        if (other.CompareTag("Dust"))
         {
+            Debug.Log("Dust off");
             isPlayerColliding = false;
             ToggleParticleEffect(isPlayerColliding);
         }
