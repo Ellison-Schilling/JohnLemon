@@ -821,11 +821,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 77f5cd2a-e42c-4936-9a0f-edbcb1195b25
+  cloudProjectId: 0c18096c-89bd-4097-a690-2cb41db17ad2
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: John Lemon
-  organizationId: ellies2021
+  projectName: JohnLemon
+  organizationId: cadenweigel
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 1
   hmiLoadingImage: {fileID: 0}
